@@ -7,6 +7,7 @@ export const fetchCategories = () => {
 	return async (dispatch) => {
 		return api.getCategories().then((categories) => {
 			dispatch(fetchCategoriesAction(categories));
+			console.log(categories)
 		});
 	};
 };

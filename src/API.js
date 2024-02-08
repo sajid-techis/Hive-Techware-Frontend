@@ -1,15 +1,11 @@
 import axios from "axios";
-require('dotenv').config()
 
-export const LOGIN_USER_KEY = "HIVE_TECHWEAR_LOGIN_USER_KEY";
-const { REACT_APP_ENVIRONMENT, REACT_APP_API_BASE_URL_PROD, REACT_APP_API_BASE_URL_DEV } = process.env;
+
+export const LOGIN_USER_KEY = "LOGIN_USER_KEY";
+
 let baseURL;
 
-if (REACT_APP_ENVIRONMENT === "PRODUCTION") {
-	baseURL = REACT_APP_API_BASE_URL_PROD;
-} else {
-	baseURL = REACT_APP_API_BASE_URL_DEV;
-}
+baseURL = 'https://hive-techware.onrender.com'
 
 const api = axios.create({
   baseURL: baseURL,
@@ -22,9 +18,12 @@ api.interceptors.request.use(
   (config) => {
     if (config.requireToken) {
       const user = localStorage.getItem(LOGIN_USER_KEY)
+      
         ? JSON.parse(localStorage.getItem(LOGIN_USER_KEY))
         : null;
-      config.headers.common["Authorization"] = user.token;
+        console.log(user.token)
+      config.headers["Authorization"] = user.token;
+      console.log(user.token);
     }
 
     return config;
@@ -38,10 +37,9 @@ api.interceptors.response.use(
   },
   (error) => {
     console.log("error.response", error);
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       localStorage.removeItem(LOGIN_USER_KEY);
     }
-
     return Promise.reject(error);
   }
 );

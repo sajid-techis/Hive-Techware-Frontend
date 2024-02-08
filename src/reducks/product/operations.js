@@ -7,6 +7,7 @@ export const fetchProducts = (query = {}, onSuccess = ()=>{}) => {
 	return async (dispatch) => {
 		return api.getProducts(query).then((products) => {
 			dispatch(fetchProductsAction(products));
+			console.log(products)
 			onSuccess()
 		});
 	};
